@@ -16,6 +16,7 @@ npm-debug.log*
 Thumbs.db
 
 # 编辑器配置
+.cursor/
 .idea/
 .vscode/
 *.sublime-project
