@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL注入学习平台</title>
+    <link rel="stylesheet" href="/css/tailwind.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/sql/sql.min.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold mb-4">SQL注入学习平台</h1>
+            <p class="text-xl text-gray-400">通过游戏化方式学习SQL注入技术</p>
+        </header>
+
+        <!-- 数据库表结构说明 -->
+        <div class="mb-8 bg-gray-800 p-6 rounded-lg">
+            <h2 class="text-2xl font-bold mb-4">数据库表结构</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <h3 class="text-xl font-semibold text-blue-400">users表</h3>
+                    <pre class="bg-gray-700 p-4 rounded-lg text-sm">
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    username TEXT,    -- 用户名
+    password TEXT,    -- 密码
+    email TEXT,      -- 邮箱
+    is_admin INTEGER -- 是否管理员(1是，0否)
+);</pre>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-xl font-semibold text-blue-400">products表</h3>
+                    <pre class="bg-gray-700 p-4 rounded-lg text-sm">
+CREATE TABLE products (
+    id INTEGER PRIMARY KEY,
+    name TEXT,       -- 产品名称
+    price REAL,      -- 价格
+    description TEXT -- 描述
+);</pre>
+                </div>
+            </div>
+            <div class="mt-4 text-gray-400">
+                <p>示例数据：</p>
+                <ul class="list-disc list-inside mt-2">
+                    <li>users表包含管理员(admin)和普通用户(user1, user2)的信息</li>
+                    <li>products表包含多个产品信息(Product A, B, C)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- 左侧：关卡信息 -->
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-4" id="levelTitleMain"></h2>
+                <div id="levelInfo" class="space-y-4">
+                    <div class="text-gray-400" id="levelDescription"></div>
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">任务目标：</h4>
+                        <p id="levelTask" class="text-gray-300"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中间：SQL编辑器 -->
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-4">SQL编辑器</h2>
+                <textarea id="sqlEditor" class="w-full h-48"></textarea>
+                <button id="runQuery" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    运行查询
+                </button>
+            </div>
+
+            <!-- 右侧：结果显示 -->
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-4">查询结果</h2>
+                <div id="queryResult" class="font-mono text-sm">
+                    <pre class="bg-gray-700 p-4 rounded-lg overflow-x-auto">结果将在这里显示...</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 关卡选择器 -->
+        <div class="mt-12">
+            <h2 class="text-2xl font-bold mb-6">关卡选择</h2>
+            <div class="mb-4">
+                <div class="flex space-x-4">
+                    <button id="basicLevels" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm">基础关卡 (1-4)</button>
+                    <button id="intermediateLevels" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm">中级关卡 (5-8)</button>
+                    <button id="advancedLevels" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm">高级关卡 (9-12)</button>
+                </div>
+            </div>
+            <div id="levelSelector" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- 关卡按钮将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <!-- 当前关卡信息 -->
+        <div class="flex-1 p-6">
+            <div class="task-description space-y-4">
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="font-bold mb-2">任务目标:</h3>
+                    <p id="levelTaskDetail" class="text-gray-300"></p>
+                </div>
+            </div>
+            <!-- 关卡详细信息将被插入到这里 -->
+            <div id="levelDetails" class="mt-4"></div>
+        </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+</html> 
